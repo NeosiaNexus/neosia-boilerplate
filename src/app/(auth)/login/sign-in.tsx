@@ -68,6 +68,7 @@ const SignIn = () => {
                 {
                   email,
                   password,
+                  callbackURL: '/',
                 },
                 {
                   onRequest: () => {
