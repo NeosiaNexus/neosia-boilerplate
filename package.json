@@ -3,10 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "bun --bun next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint --fix",
+    "format": "prettier --write .",
+    "clean": "bun --bun run format && bun --bun run lint",
+    "start:with-migrations": "bunx prisma migrate deploy && bunx prisma generate && next start",
+    "stripe": "stripe listen --forward-to localhost:3000/api/auth/stripe/webhook"
   },
   "dependencies": {
     "react": "^19.1.0",
@@ -14,14 +18,29 @@
     "next": "15.2.4"
   },
   "devDependencies": {
-    "typescript": "^5.8.2",
+    "@eslint/eslintrc": "^3.3.1",
+    "@tailwindcss/postcss": "^4.0.17",
     "@types/node": "^22.13.14",
     "@types/react": "^19.0.12",
     "@types/react-dom": "^19.0.4",
-    "@tailwindcss/postcss": "^4.0.17",
-    "tailwindcss": "^4.0.17",
+    "@typescript-eslint/eslint-plugin": "^8.28.0",
+    "@typescript-eslint/parser": "^8.28.0",
+    "autoprefixer": "^10.4.21",
     "eslint": "^9.23.0",
     "eslint-config-next": "15.2.4",
-    "@eslint/eslintrc": "^3.3.1"
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-import-resolver-typescript": "^4.3.1",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "postcss": "^8.5.3",
+    "prettier": "^3.5.3",
+    "prettier-plugin-prisma": "^5.0.0",
+    "prisma": "^6.5.0",
+    "tailwindcss": "^4.0.17",
+    "typescript": "^5.8.2",
+    "vitest": "^3.1.1"
   }
 }
