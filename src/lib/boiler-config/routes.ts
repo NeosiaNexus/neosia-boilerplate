@@ -1,8 +1,8 @@
 const routes = {
   home: '/',
   auth: {
-    login: '/auth/login',
-    register: '/auth/register',
+    login: '/login',
+    register: '/register',
   },
 };
 

@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { authClient } from '@/lib';
+import { authClient, routes } from '@/lib';
 import { cn } from '@/lib/utils';
 
 const SignIn = () => {
@@ -133,7 +133,7 @@ const SignIn = () => {
           </div>
           <div className="mt-4 text-center text-sm text-muted-foreground">
             Je n&apos;ai pas encore de compte ?{' '}
-            <Link href="/auth/register" className="text-primary hover:underline">
+            <Link href={routes.auth.register} className="text-primary hover:underline">
               M&apos;inscrire
             </Link>
           </div>
