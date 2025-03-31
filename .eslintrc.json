@@ -19,8 +19,8 @@
   ],
   "rules": {
     "react/react-in-jsx-scope": "off",
-    "no-console": "warn",
-    "no-debugger": "warn",
+    "no-console": "error",
+    "no-debugger": "error",
     "import/no-unresolved": "off",
     "unused-imports/no-unused-imports": "error",
     "no-multiple-empty-lines": ["warn", { "max": 1, "maxEOF": 0 }],
