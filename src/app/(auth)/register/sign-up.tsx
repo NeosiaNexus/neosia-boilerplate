@@ -162,6 +162,8 @@ const SignUp = () => {
                         toast.error('Le mot de passe est trop court');
                       } else if (ctx.error.message === 'Invalid email') {
                         toast.error('Email invalide');
+                      } else if (ctx.error.message.startsWith('User already exists')) {
+                        toast.error('Un utilisateur avec cet email existe déjà');
                       } else {
                         toast.error(
                           'Une erreur est survenue lors de la création de votre compte. Vérifiez vos informations et réessayer.',
