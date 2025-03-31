@@ -14,6 +14,8 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@prisma/client": "^6.5.0",
+    "better-auth": "^1.2.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.486.0",

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 
+import { config } from '@/lib';
+
 import './globals.css';
 
 const poppins = Poppins({
@@ -10,8 +12,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: 'Boilerplate Next.js',
-  description: 'Boilerplate Next.js efficae par NeosiaNexus',
+  title: config.name,
+  description: config.description,
 };
 
 export default function RootLayout({
@@ -20,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
+    <html lang={config.lang}>
       <body className={`${poppins.variable} antialiased`}>{children}</body>
     </html>
   );
