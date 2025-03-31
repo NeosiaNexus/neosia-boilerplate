@@ -10,7 +10,8 @@
     "format": "prettier --write .",
     "clean": "bun --bun run format && bun --bun run lint",
     "start:with-migrations": "bunx prisma migrate deploy && bunx prisma generate && next start",
-    "stripe": "stripe listen --forward-to localhost:3000/api/auth/stripe/webhook"
+    "stripe": "stripe listen --forward-to localhost:3000/api/auth/stripe/webhook",
+    "prepare": "husky"
   },
   "dependencies": {
     "react": "^19.1.0",
@@ -35,6 +36,7 @@
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-unused-imports": "^4.1.4",
+    "husky": "^9.1.7",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
     "prettier-plugin-prisma": "^5.0.0",
