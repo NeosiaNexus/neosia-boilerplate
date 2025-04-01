@@ -23,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang={config.lang}>
+    <html lang={config.lang} suppressHydrationWarning>
       <body className={`${poppins.variable} antialiased`}>
         <Toaster richColors expand />
         {children}
