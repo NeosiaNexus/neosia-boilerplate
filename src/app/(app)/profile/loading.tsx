@@ -31,9 +31,12 @@ const Loading = () => {
               </div>
             </div>
 
-            <div className="flex justify-end gap-4 flex-wrap">
-              <Skeleton className="h-10 w-24" />
+            <div className="flex justify-between items-center gap-4 flex-wrap">
               <Skeleton className="h-10 w-48" />
+              <div className="flex gap-4">
+                <Skeleton className="h-10 w-24" />
+                <Skeleton className="h-10 w-48" />
+              </div>
             </div>
           </div>
         </CardContent>

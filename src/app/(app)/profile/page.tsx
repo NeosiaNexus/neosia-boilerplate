@@ -1,4 +1,4 @@
-import { Image as ImageIcon, Mail, User } from 'lucide-react';
+import { Image as ImageIcon, Mail, Trash2, User } from 'lucide-react';
 import { revalidatePath } from 'next/cache';
 import { headers } from 'next/headers';
 import Link from 'next/link';
@@ -90,13 +90,19 @@ export default async function ProfilePage() {
               </div>
             </div>
 
-            <div className="flex justify-end gap-4 flex-wrap">
-              <Link href="/">
-                <Button type="button" variant="outline">
-                  Annuler
-                </Button>
-              </Link>
-              <Button type="submit">Enregistrer les modifications</Button>
+            <div className="flex justify-between items-center gap-4 flex-wrap">
+              <Button type="submit" variant="destructive" className="gap-2">
+                <Trash2 className="h-4 w-4" />
+                Supprimer mon compte
+              </Button>
+              <div className="flex gap-4">
+                <Link href="/">
+                  <Button type="button" variant="outline">
+                    Annuler
+                  </Button>
+                </Link>
+                <Button type="submit">Enregistrer les modifications</Button>
+              </div>
             </div>
           </form>
         </CardContent>
