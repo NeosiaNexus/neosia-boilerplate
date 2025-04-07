@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 
-import { config } from '@/lib';
+import { config } from '@/lib/boiler-config';
 
 export const metadata: Metadata = {
   title: `${config.name} | Authentification`,

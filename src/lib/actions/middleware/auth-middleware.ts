@@ -1,11 +1,9 @@
 import { headers } from 'next/headers';
 import { createSafeActionClient } from 'next-safe-action';
 
-import { auth } from './auth';
+import auth from '@/lib/auth';
 
-export const actionClient = createSafeActionClient();
-
-export const authAction = createSafeActionClient({
+const authAction = createSafeActionClient({
   handleServerError(error) {
     return error.message;
   },
@@ -24,3 +22,5 @@ export const authAction = createSafeActionClient({
     },
   });
 });
+
+export default authAction;

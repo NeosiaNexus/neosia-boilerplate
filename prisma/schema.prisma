@@ -8,15 +8,18 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
   name          String
   email         String
   emailVerified Boolean
   image         String?
-  sessions      Session[]
-  accounts      Account[]
+
+  sessions    Session[]
+  accounts    Account[]
+  files       StorageFile[]
+  sharedFiles StorageFile[] @relation("file_shared_with")
 
   role       String?
   banned     Boolean?
@@ -72,4 +75,30 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+model StorageFile {
+  id String @id @default(cuid())
+
+  path   String
+  bucket String
+  size   Int
+  type   String
+
+  uploadedAt DateTime  @default(now())
+  expiresAt  DateTime?
+
+  isPublic    Boolean @default(true)
+  label       String?
+  description String?
+  metadata    Json?
+
+  uploaderId String
+  uploader   User   @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
+
+  sharedWith User[] @relation("file_shared_with")
+
+  @@index([uploaderId])
+  @@index([expiresAt])
+  @@map("storage_file")
 }

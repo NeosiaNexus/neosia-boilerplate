@@ -4,7 +4,7 @@ import { admin } from 'better-auth/plugins';
 
 import prisma from './prisma';
 
-export const auth = betterAuth({
+const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'postgresql',
   }),
@@ -22,3 +22,5 @@ export const auth = betterAuth({
     },
   },
 });
+
+export default auth;
