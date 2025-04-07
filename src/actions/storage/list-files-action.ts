@@ -1,3 +1,5 @@
+'use server';
+
 import { z } from 'zod';
 
 import { authAction } from '@/lib/actions';
@@ -7,7 +9,7 @@ import { storageFileSchema } from '@/schemas';
 const outputSchema = z.object({
   message: z.string(),
   success: z.boolean(),
-  data: z.array(storageFileSchema).nullable(),
+  data: z.array(storageFileSchema.partial()).nullable(),
 });
 
 const paramSchema = z.object({
