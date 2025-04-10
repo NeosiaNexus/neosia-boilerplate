@@ -1,7 +1,7 @@
 import { headers } from 'next/headers';
 import { createSafeActionClient } from 'next-safe-action';
 
-import auth from '@/lib/auth';
+import { auth } from '@/lib/auth';
 
 const authAction = createSafeActionClient({
   handleServerError(error) {
