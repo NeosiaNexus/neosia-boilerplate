@@ -4,7 +4,7 @@ import { createSafeActionClient } from 'next-safe-action';
 import { auth } from '@/lib/auth';
 import ActionError from '@/lib/errors/ActionError';
 
-const authAction = createSafeActionClient({
+const adminMiddleware = createSafeActionClient({
   handleServerError(error) {
     return error.message;
   },
@@ -17,6 +17,10 @@ const authAction = createSafeActionClient({
     throw new ActionError('Vous devez être connecté pour effectuer cette action.');
   }
 
+  if (!session.user.role?.split(',').includes('admin')) {
+    throw new ActionError('Vous devez être administrateur pour effectuer cette action.');
+  }
+
   return next({
     ctx: {
       session,
@@ -24,4 +28,4 @@ const authAction = createSafeActionClient({
   });
 });
 
-export default authAction;
+export default adminMiddleware;

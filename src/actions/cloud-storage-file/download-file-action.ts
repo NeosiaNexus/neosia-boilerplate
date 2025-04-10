@@ -7,7 +7,7 @@ import supabase from '@/lib/supabase';
 
 const paramSchema = z.object({
   bucket: z.string(),
-  fileName: z.string(),
+  path: z.string(),
 });
 
 const outputSchema = z.object({
@@ -19,8 +19,8 @@ const outputSchema = z.object({
 const downloadFileAction = authAction
   .outputSchema(outputSchema)
   .schema(paramSchema)
-  .action(async ({ parsedInput: { bucket, fileName } }) => {
-    const { data, error } = await supabase.storage.from(bucket).download(fileName);
+  .action(async ({ parsedInput: { bucket, path } }) => {
+    const { data, error } = await supabase.storage.from(bucket).download(path);
 
     if (error) {
       return {

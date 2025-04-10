@@ -80,10 +80,11 @@ model Verification {
 model StorageFile {
   id String @id @default(cuid())
 
-  path   String
-  bucket String
-  size   Int
-  type   String
+  path           String @unique
+  bucket         String
+  size           Int
+  type           String
+  totalDownloads Int    @default(0)
 
   uploadedAt DateTime  @default(now())
   expiresAt  DateTime?
