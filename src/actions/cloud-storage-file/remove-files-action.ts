@@ -3,13 +3,14 @@
 import { z } from 'zod';
 
 import { authAction } from '@/lib/actions';
+import prisma from '@/lib/prisma';
 import supabase from '@/lib/supabase';
 import { storageFileSchema } from '@/schemas';
 
 const outputSchema = z.object({
   message: z.string(),
   success: z.boolean(),
-  deletedFiles: z.array(storageFileSchema).nullable(),
+  deletedFiles: z.array(storageFileSchema.partial()).nullable(),
 });
 
 const paramSchema = z.object({
@@ -37,6 +38,21 @@ const removeFilesAction = authAction
           paths.length === 1
             ? 'Une erreur est survenue lors de la suppression du fichier'
             : 'Une erreur est survenue lors de la suppression des fichiers',
+        success: false,
+        deletedFiles: null,
+      };
+    }
+
+    try {
+      await prisma.storageFile.deleteMany({
+        where: {
+          path: { in: paths },
+        },
+      });
+    } catch {
+      return {
+        message:
+          'Une erreur est survenue lors de la suppression du/des fichier(s) en base de données',
         success: false,
         deletedFiles: null,
       };

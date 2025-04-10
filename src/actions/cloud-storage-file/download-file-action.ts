@@ -3,6 +3,7 @@
 import { z } from 'zod';
 
 import { authAction } from '@/lib/actions';
+import prisma from '@/lib/prisma';
 import supabase from '@/lib/supabase';
 
 const paramSchema = z.object({
@@ -25,6 +26,23 @@ const downloadFileAction = authAction
     if (error) {
       return {
         message: 'Une erreur est survenue lors du téléchargement du fichier',
+        success: false,
+        data: null,
+      };
+    }
+
+    try {
+      await prisma.storageFile.update({
+        where: {
+          path,
+        },
+        data: {
+          totalDownloads: { increment: 1 },
+        },
+      });
+    } catch {
+      return {
+        message: 'Une erreur est survenue lors de la mise à jour du nombre de téléchargements',
         success: false,
         data: null,
       };

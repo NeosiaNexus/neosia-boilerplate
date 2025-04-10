@@ -3,6 +3,7 @@
 import { z } from 'zod';
 
 import { authAction } from '@/lib/actions';
+import prisma from '@/lib/prisma';
 import supabase from '@/lib/supabase';
 
 const outputSchema = z.object({
@@ -30,7 +31,7 @@ const paramSchema = z.object({
 const uploadFile = authAction
   .outputSchema(outputSchema)
   .schema(paramSchema)
-  .action(async ({ parsedInput: { bucket, file, path, upsert } }) => {
+  .action(async ({ parsedInput: { bucket, file, path, upsert }, ctx: { session } }) => {
     const { data, error } = await supabase.storage.from(bucket).upload(path, file, {
       upsert,
     });
@@ -44,6 +45,26 @@ const uploadFile = authAction
     }
 
     const publicUrl = supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl;
+
+    try {
+      await prisma.storageFile.create({
+        data: {
+          path,
+          bucket,
+          publicUrl,
+          fileName: file.name,
+          size: file.size,
+          type: file.type,
+          uploaderId: session.user.id,
+        },
+      });
+    } catch {
+      return {
+        message: 'Une erreur est survenue lors de la création du fichier en base de données',
+        success: false,
+        data: null,
+      };
+    }
 
     return {
       message: 'Le fichier a été uploadé avec succès',
