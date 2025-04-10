@@ -1,9 +1,17 @@
 import { Body, Html, Text } from '@react-email/components';
 
-const MagicLinkEmail = ({ url }: { url: string }) => {
+interface MagicLinkEmailProps {
+  url: string;
+}
+
+const MagicLinkEmail = ({ url }: MagicLinkEmailProps) => {
   return (
     <Html>
       <Body>
+        <Text>
+          Vous avez demandé un lien de connexion. Cliquez sur le lien ci-dessous pour accéder à
+          votre compte :
+        </Text>
         <Text>
           Voici votre lien : <a href={url}>{url}</a>
         </Text>

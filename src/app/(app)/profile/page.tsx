@@ -10,6 +10,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import auth from '@/lib/auth';
 
+import UserSignoutButton from './components/user-signout-button';
+
 export default async function ProfilePage() {
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -18,9 +20,14 @@ export default async function ProfilePage() {
   return (
     <div className="container mx-auto py-10">
       <Card className="max-w-2xl mx-auto">
-        <CardHeader>
-          <CardTitle>Profil</CardTitle>
-          <CardDescription>Gérez vos informations personnelles et vos préférences</CardDescription>
+        <CardHeader className="flex justify-between items-center">
+          <div>
+            <CardTitle>Profil</CardTitle>
+            <CardDescription>
+              Gérez vos informations personnelles et vos préférences
+            </CardDescription>
+          </div>
+          <UserSignoutButton />
         </CardHeader>
         <CardContent>
           <form
@@ -53,7 +60,7 @@ export default async function ProfilePage() {
                   {session?.user.name
                     ?.split(' ')
                     .map(n => n[0])
-                    .join('')}
+                    .join('') || 'Aucun'}
                 </AvatarFallback>
               </Avatar>
               <div className="space-y-2 cursor-not-allowed">

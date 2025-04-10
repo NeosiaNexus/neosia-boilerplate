@@ -1,3 +1,5 @@
+import { config } from '../boiler-config';
+
 import type { TemplateName, Templates } from './email-types';
 import mailer from './mailer';
 import renderTemplate from './templates';
@@ -18,7 +20,7 @@ const sendEmail = async <T extends TemplateName>({
   const html = await renderTemplate(template, props);
 
   await mailer.sendMail({
-    from: `"TonApp" <${process.env.SMTP_USER}>`,
+    from: `<${process.env.MAILER_AUTH_USER}> ${config.contact.company}`,
     to,
     subject,
     html,

@@ -15,15 +15,14 @@ import { cn } from '@/lib/utils';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
   return (
     <Card className="max-w-md w-full m-5">
-      <CardHeader>
-        <CardTitle className="text-lg md:text-xl">Connexion</CardTitle>
+      <CardHeader className="text-center">
+        <CardTitle className="text-lg md:text-xl">Authentification</CardTitle>
         <CardDescription className="text-xs md:text-sm">
-          C&apos;est un plaisir de vous revoir !
+          C&apos;est un plaisir de vous voir !
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -42,33 +41,14 @@ const SignIn = () => {
             />
           </div>
 
-          <div className="grid gap-2">
-            <div className="flex items-center">
-              <Label htmlFor="password">Mot de passe</Label>
-              <Link href="#" className="ml-auto inline-block text-sm underline">
-                Mot de passe oublié ?
-              </Link>
-            </div>
-
-            <Input
-              id="password"
-              type="password"
-              placeholder="ex: P@ssw0rd"
-              autoComplete="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-            />
-          </div>
-
           <Button
             type="submit"
             className="w-full"
             disabled={loading}
             onClick={async () => {
-              await authClient.signIn.email(
+              await authClient.signIn.magicLink(
                 {
                   email,
-                  password,
                   callbackURL: '/',
                 },
                 {
@@ -134,9 +114,9 @@ const SignIn = () => {
             </Button>
           </div>
           <div className="mt-4 text-center text-sm text-muted-foreground">
-            Je n&apos;ai pas encore de compte ?{' '}
-            <Link href={routes.auth.register} className="text-primary hover:underline">
-              M&apos;inscrire
+            Vous rencontrez des difficultés ? Contactez notre{' '}
+            <Link href={routes.support} className="text-primary hover:underline">
+              support
             </Link>
           </div>
         </div>
