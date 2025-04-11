@@ -4,7 +4,7 @@ import { createSafeActionClient } from 'next-safe-action';
 import auth from '@/lib/auth/auth';
 import ActionError from '@/lib/errors/ActionError';
 
-const adminMiddleware = createSafeActionClient({
+const adminAction = createSafeActionClient({
   handleServerError(error) {
     return error.message;
   },
@@ -28,4 +28,4 @@ const adminMiddleware = createSafeActionClient({
   });
 });
 
-export default adminMiddleware;
+export default adminAction;
