@@ -6,7 +6,7 @@ import auth from './lib/auth/auth';
 const unProtectedRoutes = ['/login'];
 
 const isProtectedRoute = (path: string) => {
-  return !unProtectedRoutes.some(route => path.startsWith(route));
+  return !unProtectedRoutes.some(route => path.toLocaleLowerCase() === route.toLocaleLowerCase());
 };
 
 export async function middleware(req: NextRequest) {
