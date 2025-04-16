@@ -9,6 +9,7 @@ const isProtectedRoute = (path: string) => {
   return !unProtectedRoutes.some(route => path.toLocaleLowerCase() === route.toLocaleLowerCase());
 };
 
+// TODO : utiliser les routes du fichier de route
 export async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
   const session = await auth.api.getSession({
