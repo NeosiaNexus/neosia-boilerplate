@@ -18,6 +18,10 @@
     "prettier"
   ],
   "rules": {
+    "@typescript-eslint/no-explicit-any": "warn",
+    "prefer-const": "error",
+    "no-empty-function": "error",
+    "object-shorthand": ["error", "always"],
     "react/react-in-jsx-scope": "off",
     "no-console": "error",
     "no-debugger": "error",
