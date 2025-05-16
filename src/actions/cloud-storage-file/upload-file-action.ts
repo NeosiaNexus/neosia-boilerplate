@@ -32,7 +32,10 @@ const uploadFile = authAction
   .outputSchema(outputSchema)
   .schema(paramSchema)
   .action(async ({ parsedInput: { bucket, file, path, upsert }, ctx: { session } }) => {
-    const { data, error } = await supabase.storage.from(bucket).upload(path, file, {
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    const { data, error } = await supabase.storage.from(bucket).upload(path, buffer, {
       upsert,
     });
 

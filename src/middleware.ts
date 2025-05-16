@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import auth from './lib/auth/auth';
 
-const unProtectedRoutes = ['/login'];
+const unProtectedRoutes = ['/login', '/'];
 
 const isProtectedRoute = (path: string) => {
   return !unProtectedRoutes.some(route => path.toLocaleLowerCase() === route.toLocaleLowerCase());
