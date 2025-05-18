@@ -20,20 +20,22 @@ const outputSchema = z.object({
 });
 
 const paramSchema = z.object({
-  file: z.custom<File>(f => f instanceof File && 'name' in f && 'size' in f, {
-    message: 'Doit être un fichier valide',
+  fileData: z.object({
+    name: z.string(),
+    size: z.number(),
+    type: z.string(),
+    arrayBuffer: z.instanceof(ArrayBuffer),
   }),
   bucket: z.string(),
   path: z.string(),
   upsert: z.boolean().optional().default(true),
 });
 
-const uploadFile = authAction
+const uploadFileAction = authAction
   .outputSchema(outputSchema)
   .schema(paramSchema)
-  .action(async ({ parsedInput: { bucket, file, path, upsert }, ctx: { session } }) => {
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+  .action(async ({ parsedInput: { bucket, fileData, path, upsert }, ctx: { session } }) => {
+    const buffer = Buffer.from(fileData.arrayBuffer);
 
     const { data, error } = await supabase.storage.from(bucket).upload(path, buffer, {
       upsert,
@@ -55,9 +57,9 @@ const uploadFile = authAction
           path,
           bucket,
           publicUrl,
-          fileName: file.name,
-          size: file.size,
-          type: file.type,
+          fileName: fileData.name,
+          size: fileData.size,
+          type: fileData.type,
           uploaderId: session.user.id,
         },
       });
@@ -81,4 +83,4 @@ const uploadFile = authAction
     };
   });
 
-export default uploadFile;
+export default uploadFileAction;
