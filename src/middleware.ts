@@ -2,28 +2,36 @@ import { headers } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
 import auth from './lib/auth/auth';
+import { routes } from './lib/boiler-config';
 
-const unProtectedRoutes = ['/login'];
+const publicRoutes = [routes.auth.login, routes.home, '/upload'];
 
 const isProtectedRoute = (path: string) => {
-  return !unProtectedRoutes.some(route => path.toLocaleLowerCase() === route.toLocaleLowerCase());
+  return !publicRoutes.some(route => path.toLowerCase() === route.toLowerCase());
 };
 
-// TODO : utiliser les routes du fichier de route
 export async function middleware(req: NextRequest) {
-  const path = req.nextUrl.pathname;
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
+  const path = req.nextUrl.pathname;
+
+  // TODO : Enlever le commentaire si on veut vérifier les rôles avant de rediriger l'utilisateur
+  // const userRoles = session?.user.role?.split(',');
+
+  if (path.startsWith('/image') || path.startsWith('/_next') || path.includes('.')) {
+    return NextResponse.next();
+  }
+
   if (isProtectedRoute(path) && !session) {
     return NextResponse.redirect(
-      new URL(`/login?returnUrl=${encodeURIComponent(path)}`, req.nextUrl),
+      new URL(`${routes.auth.login}?returnUrl=${encodeURIComponent(path)}`, req.nextUrl),
     );
   }
 
-  if (!isProtectedRoute(path) && session) {
-    return NextResponse.redirect(new URL('/profile', req.nextUrl));
+  if (path.toLowerCase() === routes.auth.login && session) {
+    return NextResponse.redirect(new URL(routes.home, req.nextUrl));
   }
 
   return NextResponse.next();
