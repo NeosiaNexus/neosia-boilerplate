@@ -55,7 +55,7 @@ const downloadFileAction = authAction
     }
 
     return {
-      message: 'URL de téléchargement générée avec succès',
+      message: 'Fichier téléchargé avec succès',
       success: true,
       url,
     };

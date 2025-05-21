@@ -15,7 +15,7 @@ const paramSchema = z.object({
       .string()
       .min(1)
       // eslint-disable-next-line no-useless-escape
-      .regex(/^[a-zA-Z0-9\/\-_\.]+$/, 'Nom invalide'),
+      .regex(/^[^\\/]+$/, 'Nom invalide'),
     size: z.number().positive(),
     type: z.string().nonempty(),
     arrayBuffer: z.instanceof(ArrayBuffer),

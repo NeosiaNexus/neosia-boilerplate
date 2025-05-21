@@ -3,7 +3,7 @@
 import { z } from 'zod';
 
 import { authAction } from '@/lib/actions';
-import { getPresignedUrl, listObjectKeys } from '@/lib/storage';
+import { listObjectKeys } from '@/lib/storage';
 import storageFileSchema from '@/schemas/file-storage-schema';
 
 const paramSchema = z.object({
@@ -23,30 +23,18 @@ export const listFilesAction = authAction
     try {
       const allKeys: string[] = await listObjectKeys(bucket);
 
-      const data = await Promise.all(
-        allKeys.map(async key => {
-          let presignedUrl: string;
-          try {
-            presignedUrl = await getPresignedUrl(bucket, key);
-          } catch {
-            presignedUrl = '';
-          }
-
-          return {
-            path: key,
-            publicUrl: presignedUrl,
-          };
-        }),
-      );
-
       return {
         message: 'Les fichiers ont été récupérés avec succès',
         success: true,
-        data,
+        data: allKeys.map(key => ({
+          path: key,
+          bucket,
+        })),
       };
     } catch {
       return {
-        message: 'Une erreur est survenue lors de la récupération des fichiers',
+        message:
+          'Une erreur est survenue lors de la récupération des fichiers ou le bucket n’existe pas',
         success: false,
         data: [],
       };

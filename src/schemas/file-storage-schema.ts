@@ -4,7 +4,8 @@ import { pathSchema } from './common-schema';
 
 const storageFileSchema = z.object({
   path: pathSchema,
-  publicUrl: z.string(),
+  bucket: z.string(),
 });
 
+export type storageFileType = z.infer<typeof storageFileSchema>;
 export default storageFileSchema;
