@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import { Metadata } from 'next';
 
 import { config } from '@/lib/boiler-config';
@@ -12,5 +14,9 @@ export default function AuthLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <main className="flex h-screen items-center justify-center">{children}</main>;
+  return (
+    <main className="flex h-screen items-center justify-center">
+      <Suspense fallback={<div>Chargement...</div>}>{children}</Suspense>
+    </main>
+  );
 }
