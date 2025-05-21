@@ -122,9 +122,7 @@ export default function UploadPage() {
 
       toast.success(res?.data?.message);
 
-      const searchFormData = new FormData();
-      searchFormData.append('bucket', bucket);
-      await handleSearch(searchFormData);
+      setFiles(files.filter(file => file.path !== path));
     } finally {
       setSearchLoading(false);
     }
