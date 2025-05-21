@@ -4,54 +4,60 @@ import { z } from 'zod';
 
 import { authAction } from '@/lib/actions';
 import prisma from '@/lib/prisma';
-import supabase from '@/lib/supabase';
+import { bucketExist, getPresignedUrl } from '@/lib/storage';
+import { pathSchema } from '@/schemas/common-schema';
 
 const paramSchema = z.object({
   bucket: z.string(),
-  path: z.string(),
+  path: pathSchema,
 });
 
 const outputSchema = z.object({
   message: z.string(),
   success: z.boolean(),
-  data: z.instanceof(Blob).nullable(),
+  url: z.string().url().nullable(),
 });
 
 const downloadFileAction = authAction
-  .outputSchema(outputSchema)
   .schema(paramSchema)
+  .outputSchema(outputSchema)
   .action(async ({ parsedInput: { bucket, path } }) => {
-    const { data, error } = await supabase.storage.from(bucket).download(path);
-
-    if (error) {
+    if (!(await bucketExist(bucket))) {
       return {
-        message: 'Une erreur est survenue lors du téléchargement du fichier',
+        message: 'Le bucket n’existe pas',
         success: false,
-        data: null,
+        url: null,
+      };
+    }
+
+    let url: string;
+    try {
+      url = await getPresignedUrl(bucket, path);
+    } catch {
+      return {
+        message: 'Impossible de générer l’URL de téléchargement',
+        success: false,
+        url: null,
       };
     }
 
     try {
       await prisma.storageFile.update({
-        where: {
-          path,
-        },
-        data: {
-          totalDownloads: { increment: 1 },
-        },
+        where: { path },
+        data: { totalDownloads: { increment: 1 } },
       });
     } catch {
       return {
-        message: 'Une erreur est survenue lors de la mise à jour du nombre de téléchargements',
+        message: 'Erreur lors de la mise à jour du compteur',
         success: false,
-        data: null,
+        url: null,
       };
     }
 
     return {
-      message: 'Le fichier a été téléchargé avec succès',
+      message: 'Fichier téléchargé avec succès',
       success: true,
-      data,
+      url,
     };
   });
 

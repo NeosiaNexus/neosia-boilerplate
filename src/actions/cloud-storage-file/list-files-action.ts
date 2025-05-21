@@ -3,38 +3,42 @@
 import { z } from 'zod';
 
 import { authAction } from '@/lib/actions';
-import supabase from '@/lib/supabase';
-import { storageFileSchema } from '@/schemas';
+import { listObjectKeys } from '@/lib/storage';
+import storageFileSchema from '@/schemas/file-storage-schema';
+
+const paramSchema = z.object({
+  bucket: z.string().min(1),
+});
 
 const outputSchema = z.object({
   message: z.string(),
   success: z.boolean(),
-  data: z.array(storageFileSchema.partial()).nullable(),
+  data: z.array(storageFileSchema),
 });
 
-const paramSchema = z.object({
-  bucket: z.string(),
-});
-
-const listFilesAction = authAction
-  .outputSchema(outputSchema)
+export const listFilesAction = authAction
   .schema(paramSchema)
+  .outputSchema(outputSchema)
   .action(async ({ parsedInput: { bucket } }) => {
-    const { data, error } = await supabase.storage.from(bucket).list();
+    try {
+      const allKeys: string[] = await listObjectKeys(bucket);
 
-    if (error) {
       return {
-        message: 'Une erreur est survenue lors de la récupération des fichiers',
+        message: 'Les fichiers ont été récupérés avec succès',
+        success: true,
+        data: allKeys.map(key => ({
+          path: key,
+          bucket,
+        })),
+      };
+    } catch {
+      return {
+        message:
+          'Une erreur est survenue lors de la récupération des fichiers ou le bucket n’existe pas',
         success: false,
-        data: null,
+        data: [],
       };
     }
-
-    return {
-      message: 'Les fichiers ont été récupérés avec succès',
-      success: true,
-      data,
-    };
   });
 
 export default listFilesAction;

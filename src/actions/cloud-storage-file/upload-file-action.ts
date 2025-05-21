@@ -4,7 +4,23 @@ import { z } from 'zod';
 
 import { authAction } from '@/lib/actions';
 import prisma from '@/lib/prisma';
-import supabase from '@/lib/supabase';
+import { getBucketOrCreate, getPresignedUrl, storage } from '@/lib/storage';
+import { pathSchema } from '@/schemas/common-schema';
+
+const paramSchema = z.object({
+  bucket: z.string().min(1),
+  path: pathSchema,
+  fileData: z.object({
+    name: z
+      .string()
+      .min(1)
+      // eslint-disable-next-line no-useless-escape
+      .regex(/^[^\\/]+$/, 'Nom invalide'),
+    size: z.number().positive(),
+    type: z.string().nonempty(),
+    arrayBuffer: z.instanceof(ArrayBuffer),
+  }),
+});
 
 const outputSchema = z.object({
   message: z.string(),
@@ -12,50 +28,57 @@ const outputSchema = z.object({
   data: z
     .object({
       id: z.string(),
-      path: z.string(),
-      fullPath: z.string(),
+      path: pathSchema,
       publicUrl: z.string(),
     })
     .nullable(),
 });
 
-const paramSchema = z.object({
-  fileData: z.object({
-    name: z.string(),
-    size: z.number(),
-    type: z.string(),
-    arrayBuffer: z.instanceof(ArrayBuffer),
-  }),
-  bucket: z.string(),
-  path: z.string(),
-  upsert: z.boolean().optional().default(true),
-});
-
-const uploadFileAction = authAction
-  .outputSchema(outputSchema)
+export const uploadFileAction = authAction
   .schema(paramSchema)
-  .action(async ({ parsedInput: { bucket, fileData, path, upsert }, ctx: { session } }) => {
-    const buffer = Buffer.from(fileData.arrayBuffer);
-
-    const { data, error } = await supabase.storage.from(bucket).upload(path, buffer, {
-      upsert,
-    });
-
-    if (error) {
+  .outputSchema(outputSchema)
+  .action(async ({ parsedInput: { bucket, path, fileData }, ctx: { session } }) => {
+    try {
+      await getBucketOrCreate(bucket);
+    } catch {
       return {
-        message: "Une erreur est survenue lors de l'upload du fichier",
+        message: 'Le bucket n’existe pas et n’a pas pu être créé',
         success: false,
         data: null,
       };
     }
 
-    const publicUrl = supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl;
+    const ext = fileData.name.split('.').pop()!;
+    const base = fileData.name.replace(new RegExp(`\\.${ext}$`), '');
+    const objectKey = `${path}/${base}.${ext}`;
+
+    const buffer = Buffer.from(fileData.arrayBuffer);
 
     try {
-      await prisma.storageFile.create({
+      await storage.putObject(bucket, objectKey, buffer, buffer.length, {
+        'Content-Type': fileData.type,
+      });
+    } catch {
+      return {
+        message: 'Une erreur est survenue lors de l’upload du fichier',
+        success: false,
+        data: null,
+      };
+    }
+
+    let publicUrl: string;
+    try {
+      publicUrl = await getPresignedUrl(bucket, objectKey);
+    } catch {
+      publicUrl = `${process.env.MINIO_ENDPOINT}/${bucket}/${objectKey}`;
+    }
+
+    let record;
+    try {
+      record = await prisma.storageFile.create({
         data: {
-          path,
           bucket,
+          path: objectKey,
           publicUrl,
           fileName: fileData.name,
           size: fileData.size,
@@ -65,7 +88,7 @@ const uploadFileAction = authAction
       });
     } catch {
       return {
-        message: 'Une erreur est survenue lors de la création du fichier en base de données',
+        message: 'Une erreur est survenue lors de la création du fichier en base',
         success: false,
         data: null,
       };
@@ -75,10 +98,9 @@ const uploadFileAction = authAction
       message: 'Le fichier a été uploadé avec succès',
       success: true,
       data: {
-        id: data.id,
-        path: data.path,
-        fullPath: data.fullPath,
-        publicUrl,
+        id: record.id,
+        path: record.path,
+        publicUrl: record.publicUrl,
       },
     };
   });

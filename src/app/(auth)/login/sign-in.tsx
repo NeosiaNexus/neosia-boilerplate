@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,8 +15,12 @@ import { routes } from '@/lib/boiler-config';
 import { cn } from '@/lib/utils';
 
 const SignIn = () => {
+  const searchParams = useSearchParams();
+
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const returnUrl = searchParams.get('returnUrl') || routes.home;
 
   return (
     <Card className="max-w-md w-full m-5">
@@ -49,7 +54,7 @@ const SignIn = () => {
               await authClient.signIn.magicLink(
                 {
                   email,
-                  callbackURL: '/',
+                  callbackURL: returnUrl,
                 },
                 {
                   onRequest: () => {
@@ -74,7 +79,7 @@ const SignIn = () => {
                 await authClient.signIn.social(
                   {
                     provider: 'google',
-                    callbackURL: '/',
+                    callbackURL: returnUrl,
                   },
                   {
                     onRequest: () => {
