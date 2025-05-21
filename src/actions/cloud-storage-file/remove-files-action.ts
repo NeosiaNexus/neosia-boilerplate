@@ -4,23 +4,22 @@ import { z } from 'zod';
 
 import { authAction } from '@/lib/actions';
 import prisma from '@/lib/prisma';
-import supabase from '@/lib/supabase';
-import { storageFileSchema } from '@/schemas';
+import { storage } from '@/lib/storage';
+
+const paramSchema = z.object({
+  bucket: z.string().min(1),
+  paths: z.array(z.string()).nonempty(),
+});
 
 const outputSchema = z.object({
   message: z.string(),
   success: z.boolean(),
-  deletedFiles: z.array(storageFileSchema.partial()).nullable(),
+  deletedFiles: z.array(z.string()).nullable(),
 });
 
-const paramSchema = z.object({
-  bucket: z.string(),
-  paths: z.array(z.string()),
-});
-
-const removeFilesAction = authAction
-  .outputSchema(outputSchema)
+export const removeFilesAction = authAction
   .schema(paramSchema)
+  .outputSchema(outputSchema)
   .action(async ({ parsedInput: { bucket, paths } }) => {
     if (paths.length === 0) {
       return {
@@ -30,9 +29,16 @@ const removeFilesAction = authAction
       };
     }
 
-    const { error, data } = await supabase.storage.from(bucket).remove(paths);
+    const deleted: string[] = [];
 
-    if (error) {
+    try {
+      await Promise.all(
+        paths.map(async key => {
+          await storage.removeObject(bucket, key);
+          deleted.push(key);
+        }),
+      );
+    } catch {
       return {
         message:
           paths.length === 1
@@ -46,27 +52,25 @@ const removeFilesAction = authAction
     try {
       await prisma.storageFile.deleteMany({
         where: {
-          path: { in: paths },
+          bucket,
+          path: { in: deleted },
         },
       });
     } catch {
       return {
-        message:
-          'Une erreur est survenue lors de la suppression du/des fichier(s) en base de données',
+        message: 'Une erreur est survenue lors de la suppression en base de données',
         success: false,
         deletedFiles: null,
       };
     }
 
-    const message =
-      paths.length === 1
-        ? 'Le fichier a été supprimé avec succès'
-        : 'Les fichiers ont été supprimés avec succès';
-
     return {
-      message,
+      message:
+        deleted.length === 1
+          ? 'Le fichier a été supprimé avec succès'
+          : 'Les fichiers ont été supprimés avec succès',
       success: true,
-      deletedFiles: data,
+      deletedFiles: deleted,
     };
   });
 

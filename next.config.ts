@@ -7,10 +7,24 @@ const nextConfig: NextConfig = {
         hostname: 'lh3.googleusercontent.com',
         protocol: 'https',
       },
+      {
+        hostname: 'localhost',
+        protocol: 'http',
+        pathname: '/**',
+      },
+      {
+        hostname: 'localhost',
+        protocol: 'https',
+        pathname: '/**',
+      },
     ],
   },
+  output: 'standalone',
   experimental: {
     nodeMiddleware: true,
+    serverActions: {
+      bodySizeLimit: '10000mb',
+    },
   },
 };
 

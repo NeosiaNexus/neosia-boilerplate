@@ -3,38 +3,54 @@
 import { z } from 'zod';
 
 import { authAction } from '@/lib/actions';
-import supabase from '@/lib/supabase';
-import { storageFileSchema } from '@/schemas';
+import { getPresignedUrl, listObjectKeys } from '@/lib/storage';
+import storageFileSchema from '@/schemas/file-storage-schema';
+
+const paramSchema = z.object({
+  bucket: z.string().min(1),
+});
 
 const outputSchema = z.object({
   message: z.string(),
   success: z.boolean(),
-  data: z.array(storageFileSchema.partial()).nullable(),
+  data: z.array(storageFileSchema),
 });
 
-const paramSchema = z.object({
-  bucket: z.string(),
-});
-
-const listFilesAction = authAction
-  .outputSchema(outputSchema)
+export const listFilesAction = authAction
   .schema(paramSchema)
+  .outputSchema(outputSchema)
   .action(async ({ parsedInput: { bucket } }) => {
-    const { data, error } = await supabase.storage.from(bucket).list();
+    try {
+      const allKeys: string[] = await listObjectKeys(bucket);
 
-    if (error) {
+      const data = await Promise.all(
+        allKeys.map(async key => {
+          let presignedUrl: string;
+          try {
+            presignedUrl = await getPresignedUrl(bucket, key);
+          } catch {
+            presignedUrl = '';
+          }
+
+          return {
+            path: key,
+            publicUrl: presignedUrl,
+          };
+        }),
+      );
+
+      return {
+        message: 'Les fichiers ont été récupérés avec succès',
+        success: true,
+        data,
+      };
+    } catch {
       return {
         message: 'Une erreur est survenue lors de la récupération des fichiers',
         success: false,
-        data: null,
+        data: [],
       };
     }
-
-    return {
-      message: 'Les fichiers ont été récupérés avec succès',
-      success: true,
-      data,
-    };
   });
 
 export default listFilesAction;
