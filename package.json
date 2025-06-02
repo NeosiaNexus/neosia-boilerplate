@@ -26,7 +26,7 @@
     "clsx": "^2.1.1",
     "lucide-react": "^0.487.0",
     "minio": "^8.0.5",
-    "next": "15.3.1-canary.1",
+    "next": "15.3.3",
     "next-safe-action": "^7.10.8",
     "next-zod-route": "^0.2.6",
     "nodemailer": "^6.10.1",
