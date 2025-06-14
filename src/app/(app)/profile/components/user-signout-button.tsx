@@ -6,10 +6,10 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import authClient from '@/lib/auth/auth-client';
 
-const UserSignoutButton = () => {
+const UserSignoutButton = (): React.JSX.Element => {
   const router = useRouter();
 
-  const handleSignOut = async () => {
+  const handleSignOut = async (): Promise<void> => {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {

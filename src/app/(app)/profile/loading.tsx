@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
-const Loading = () => {
+const Loading = (): React.JSX.Element => {
   return (
     <div className="container mx-auto py-10">
       <Card className="max-w-2xl mx-auto">

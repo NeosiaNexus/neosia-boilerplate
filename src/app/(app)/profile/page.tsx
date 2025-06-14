@@ -12,7 +12,7 @@ import auth from '@/lib/auth/auth';
 
 import UserSignoutButton from './components/user-signout-button';
 
-export default async function ProfilePage() {
+export default async function ProfilePage(): Promise<React.JSX.Element> {
   const session = await auth.api.getSession({
     headers: await headers(),
   });

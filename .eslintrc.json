@@ -5,7 +5,15 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "react", "react-hooks", "jsx-a11y", "import", "unused-imports"],
+  "plugins": [
+    "@typescript-eslint",
+    "react",
+    "react-hooks",
+    "jsx-a11y",
+    "import",
+    "unused-imports",
+    "no-floating-promise"
+  ],
   "extends": [
     "next",
     "next/core-web-vitals",
@@ -18,7 +26,11 @@
     "prettier"
   ],
   "rules": {
+    "@typescript-eslint/explicit-function-return-type": ["warn", { "allowExpressions": true }],
+    "@typescript-eslint/explicit-module-boundary-types": "warn",
+    "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
     "@typescript-eslint/no-explicit-any": "warn",
+    "no-floating-promise/no-floating-promise": 2,
     "prefer-const": "error",
     "no-empty-function": "error",
     "object-shorthand": ["error", "always"],
@@ -31,6 +43,15 @@
     "no-trailing-spaces": "warn",
     "eol-last": ["warn", "always"],
     "indent": ["warn", 2, { "SwitchCase": 1 }],
+    "no-duplicate-imports": "error",
+    "no-return-await": "error",
+    "no-var": "error",
+    "eqeqeq": ["error", "always"],
+    "no-param-reassign": ["error"],
+    "prefer-arrow-callback": "error",
+    "react/jsx-boolean-value": ["warn", "never"],
+    "react/self-closing-comp": "warn",
+    "react-hooks/exhaustive-deps": "warn",
     "unused-imports/no-unused-vars": [
       "warn",
       {
@@ -75,13 +96,16 @@
     ]
   },
   "ignorePatterns": [
-    "node_modules",
-    ".next",
-    "public",
-    "dist",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
     "vitest.config.ts",
-    "*test.ts",
-    "*.md"
+    "*.md",
+    "node_modules/",
+    ".next/",
+    "public/",
+    "dist/"
   ],
   "settings": {
     "import/resolver": {

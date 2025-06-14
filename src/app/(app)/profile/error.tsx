@@ -5,7 +5,11 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-export default function Error({ error }: { error: Error & { digest?: string } }) {
+export default function Error({
+  error,
+}: {
+  error: Error & { digest?: string };
+}): React.JSX.Element {
   const router = useRouter();
 
   return (

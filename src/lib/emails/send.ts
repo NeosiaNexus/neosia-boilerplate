@@ -16,7 +16,7 @@ const sendEmail = async <T extends TemplateName>({
   subject: string;
   template: T;
   props: TemplateProps<T>;
-}) => {
+}): Promise<void> => {
   const html = await renderTemplate(template, props);
 
   await mailer.sendMail({
