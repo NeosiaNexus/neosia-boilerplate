@@ -1,6 +1,13 @@
-.next
 node_modules
+.next
 dist
-out
 public
+coverage
+*.log
+*.lock
 *.md
+*.svg
+.vscode
+.env
+.env.*
+out
