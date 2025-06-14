@@ -129,7 +129,7 @@ export default function UploadPage(): React.JSX.Element {
   };
 
   return (
-    <div className="flex justify-center items-center gap-8 w-screen h-screen">
+    <div className="flex h-screen w-screen items-center justify-center gap-8">
       <Card className="w-1/4">
         <CardHeader>
           <CardTitle>Stockage</CardTitle>

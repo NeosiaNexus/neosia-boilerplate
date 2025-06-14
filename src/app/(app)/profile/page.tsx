@@ -19,8 +19,8 @@ export default async function ProfilePage(): Promise<React.JSX.Element> {
 
   return (
     <div className="container mx-auto py-10">
-      <Card className="max-w-2xl mx-auto">
-        <CardHeader className="flex justify-between items-center">
+      <Card className="mx-auto max-w-2xl">
+        <CardHeader className="flex items-center justify-between">
           <div>
             <CardTitle>Profil</CardTitle>
             <CardDescription>
@@ -63,12 +63,12 @@ export default async function ProfilePage(): Promise<React.JSX.Element> {
                     .join('') || 'Aucun'}
                 </AvatarFallback>
               </Avatar>
-              <div className="space-y-2 cursor-not-allowed">
+              <div className="cursor-not-allowed space-y-2">
                 <Button variant="outline" className="gap-2" type="button" disabled>
                   <ImageIcon className="h-4 w-4" />
                   Changer la photo
                 </Button>
-                <p className="text-sm text-muted-foreground">PNG, JPG jusqu&apos;à 2MB</p>
+                <p className="text-muted-foreground text-sm">PNG, JPG jusqu&apos;à 2MB</p>
               </div>
             </div>
 
@@ -76,28 +76,28 @@ export default async function ProfilePage(): Promise<React.JSX.Element> {
               <div className="space-y-2">
                 <Label htmlFor="name">Nom</Label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <User className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
                   <Input id="name" name="name" defaultValue={session?.user.name} className="pl-9" />
                 </div>
               </div>
 
-              <div className="space-y-2 cursor-not-allowed">
+              <div className="cursor-not-allowed space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Mail className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
                   <Input
                     id="email"
                     name="email"
                     type="email"
                     defaultValue={session?.user.email}
-                    className="pl-9 "
+                    className="pl-9"
                     disabled
                   />
                 </div>
               </div>
             </div>
 
-            <div className="flex justify-between items-center gap-4 flex-wrap">
+            <div className="flex flex-wrap items-center justify-between gap-4">
               <Button type="submit" variant="destructive" className="gap-2">
                 <Trash2 className="h-4 w-4" />
                 Supprimer mon compte

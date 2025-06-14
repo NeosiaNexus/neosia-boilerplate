@@ -23,7 +23,7 @@ const SignIn = (): React.JSX.Element => {
   const returnUrl = searchParams.get('returnUrl') || routes.home;
 
   return (
-    <Card className="max-w-md w-full m-5">
+    <Card className="m-5 w-full max-w-md">
       <CardHeader className="text-center">
         <CardTitle className="text-lg md:text-xl">Authentification</CardTitle>
         <CardDescription className="text-xs md:text-sm">
@@ -70,7 +70,7 @@ const SignIn = (): React.JSX.Element => {
             {loading ? <Loader2 size={16} className="animate-spin" /> : 'Connexion'}
           </Button>
 
-          <div className={cn('w-full gap-2 flex items-center', 'justify-between flex-col')}>
+          <div className={cn('flex w-full items-center gap-2', 'flex-col justify-between')}>
             <Button
               variant="outline"
               className={cn('w-full gap-2')}
@@ -118,7 +118,7 @@ const SignIn = (): React.JSX.Element => {
               Continuer avec Google
             </Button>
           </div>
-          <div className="mt-4 text-center text-sm text-muted-foreground">
+          <div className="text-muted-foreground mt-4 text-center text-sm">
             Vous rencontrez des difficultés ? Contactez notre{' '}
             <Link href={routes.support} className="text-primary hover:underline">
               support

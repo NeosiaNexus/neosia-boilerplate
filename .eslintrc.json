@@ -42,7 +42,7 @@
     "no-multiple-empty-lines": ["warn", { "max": 1, "maxEOF": 0 }],
     "no-trailing-spaces": "warn",
     "eol-last": ["warn", "always"],
-    "indent": ["warn", 2, { "SwitchCase": 1 }],
+    "indent": "off",
     "no-duplicate-imports": "error",
     "no-return-await": "error",
     "no-var": "error",
