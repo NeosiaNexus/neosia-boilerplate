@@ -13,7 +13,7 @@ export default function AuthLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>): React.JSX.Element {
   return (
     <main className="flex h-screen items-center justify-center">
       <Suspense fallback={<div>Chargement...</div>}>{children}</Suspense>

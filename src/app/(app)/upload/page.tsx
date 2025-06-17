@@ -18,12 +18,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { storageFileType } from '@/schemas';
 
-export default function UploadPage() {
+export default function UploadPage(): React.JSX.Element {
   const [files, setFiles] = useState<storageFileType[]>([]);
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
   const [createLoading, setCreateLoading] = useState<boolean>(false);
 
-  const handleUpload = async (formData: FormData) => {
+  const handleUpload = async (formData: FormData): Promise<void> => {
     setCreateLoading(true);
 
     try {
@@ -53,7 +53,7 @@ export default function UploadPage() {
     }
   };
 
-  const handleSearch = async (formData: FormData) => {
+  const handleSearch = async (formData: FormData): Promise<void> => {
     setSearchLoading(true);
 
     try {
@@ -79,7 +79,7 @@ export default function UploadPage() {
     }
   };
 
-  const handleDownload = async (formData: FormData) => {
+  const handleDownload = async (formData: FormData): Promise<void> => {
     setSearchLoading(true);
 
     try {
@@ -103,7 +103,7 @@ export default function UploadPage() {
     }
   };
 
-  const handleDelete = async (formData: FormData) => {
+  const handleDelete = async (formData: FormData): Promise<void> => {
     setSearchLoading(true);
 
     try {
@@ -129,7 +129,7 @@ export default function UploadPage() {
   };
 
   return (
-    <div className="flex justify-center items-center gap-8 w-screen h-screen">
+    <div className="flex h-screen w-screen items-center justify-center gap-8">
       <Card className="w-1/4">
         <CardHeader>
           <CardTitle>Stockage</CardTitle>

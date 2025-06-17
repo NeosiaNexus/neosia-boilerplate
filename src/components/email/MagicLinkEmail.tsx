@@ -4,7 +4,7 @@ interface MagicLinkEmailProps {
   url: string;
 }
 
-const MagicLinkEmail = ({ url }: MagicLinkEmailProps) => {
+const MagicLinkEmail = ({ url }: MagicLinkEmailProps): React.JSX.Element => {
   return (
     <Html>
       <Body>

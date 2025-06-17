@@ -11,6 +11,6 @@ export default function AppLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>): React.JSX.Element {
   return <main>{children}</main>;
 }

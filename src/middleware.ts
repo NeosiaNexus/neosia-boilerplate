@@ -6,11 +6,11 @@ import { routes } from './lib/boiler-config';
 
 const publicRoutes = [routes.auth.login, routes.home];
 
-const isProtectedRoute = (path: string) => {
+const isProtectedRoute = (path: string): boolean => {
   return !publicRoutes.some(route => path.toLowerCase() === route.toLowerCase());
 };
 
-export async function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest): Promise<NextResponse> {
   const session = await auth.api.getSession({
     headers: await headers(),
   });

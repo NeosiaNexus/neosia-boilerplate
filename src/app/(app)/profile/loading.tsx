@@ -1,13 +1,13 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
-const Loading = () => {
+const Loading = (): React.JSX.Element => {
   return (
     <div className="container mx-auto py-10">
-      <Card className="max-w-2xl mx-auto">
+      <Card className="mx-auto max-w-2xl">
         <CardHeader>
           <Skeleton className="h-8 w-32" />
-          <Skeleton className="h-4 w-64 mt-2" />
+          <Skeleton className="mt-2 h-4 w-64" />
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
@@ -31,7 +31,7 @@ const Loading = () => {
               </div>
             </div>
 
-            <div className="flex justify-between items-center gap-4 flex-wrap">
+            <div className="flex flex-wrap items-center justify-between gap-4">
               <Skeleton className="h-10 w-48" />
               <div className="flex gap-4">
                 <Skeleton className="h-10 w-24" />
