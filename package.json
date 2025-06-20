@@ -14,7 +14,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@prisma/client": "^6.9.0",
+    "@prisma/client": "^6.10.1",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-slot": "^1.2.3",
@@ -24,10 +24,10 @@
     "better-auth": "^1.2.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.516.0",
+    "lucide-react": "^0.518.0",
     "minio": "^8.0.5",
     "next": "15.4.0-canary.84",
-    "next-safe-action": "^8.0.3",
+    "next-safe-action": "^8.0.4",
     "next-zod-route": "^0.2.6",
     "nodemailer": "^7.0.3",
     "react": "^19.1.0",
@@ -47,7 +47,7 @@
     "@typescript-eslint/parser": "^8.34.1",
     "autoprefixer": "^10.4.21",
     "eslint": "^9.29.0",
-    "eslint-config-next": "15.3.3",
+    "eslint-config-next": "15.3.4",
     "eslint-config-prettier": "^10.1.5",
     "eslint-import-resolver-typescript": "^4.4.3",
     "eslint-plugin-import": "^2.31.0",
@@ -61,10 +61,10 @@
     "prettier": "^3.5.3",
     "prettier-plugin-organize-imports": "^4.1.0",
     "prettier-plugin-prisma": "^5.0.0",
-    "prettier-plugin-tailwindcss": "^0.6.12",
-    "prisma": "^6.9.0",
+    "prettier-plugin-tailwindcss": "^0.6.13",
+    "prisma": "^6.10.1",
     "tailwindcss": "^4.1.10",
     "typescript": "^5.8.3",
-    "vitest": "^3.2.3"
+    "vitest": "^3.2.4"
   }
 }
