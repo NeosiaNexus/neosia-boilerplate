@@ -8,8 +8,8 @@
   "arrowParens": "avoid",
   "plugins": [
     "prettier-plugin-prisma",
-    "prettier-plugin-tailwindcss",
-    "prettier-plugin-organize-imports"
+    "prettier-plugin-organize-imports",
+    "prettier-plugin-tailwindcss"
   ],
   "useTabs": false
 }
