@@ -7,7 +7,7 @@ import prisma from '@/lib/prisma';
 import { getBucketOrCreate, getPresignedUrl, storage } from '@/lib/storage';
 import { pathSchema } from '@/schemas/common-schema';
 
-const paramSchema = z.object({
+const inputSchema = z.object({
   bucket: z.string().min(1),
   path: pathSchema,
   fileData: z.object({
@@ -35,7 +35,7 @@ const outputSchema = z.object({
 });
 
 export const uploadFileAction = authAction
-  .schema(paramSchema)
+  .inputSchema(inputSchema)
   .outputSchema(outputSchema)
   .action(async ({ parsedInput: { bucket, path, fileData }, ctx: { session } }) => {
     try {

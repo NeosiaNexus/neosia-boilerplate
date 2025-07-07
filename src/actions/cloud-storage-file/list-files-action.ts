@@ -6,7 +6,7 @@ import { authAction } from '@/lib/actions';
 import { listObjectKeys } from '@/lib/storage';
 import storageFileSchema from '@/schemas/file-storage-schema';
 
-const paramSchema = z.object({
+const inputSchema = z.object({
   bucket: z.string().min(1),
 });
 
@@ -17,7 +17,7 @@ const outputSchema = z.object({
 });
 
 export const listFilesAction = authAction
-  .schema(paramSchema)
+  .inputSchema(inputSchema)
   .outputSchema(outputSchema)
   .action(async ({ parsedInput: { bucket } }) => {
     try {

@@ -7,7 +7,7 @@ import prisma from '@/lib/prisma';
 import { bucketExist, getPresignedUrl } from '@/lib/storage';
 import { pathSchema } from '@/schemas/common-schema';
 
-const paramSchema = z.object({
+const inputSchema = z.object({
   bucket: z.string(),
   path: pathSchema,
 });
@@ -19,7 +19,7 @@ const outputSchema = z.object({
 });
 
 const downloadFileAction = authAction
-  .schema(paramSchema)
+  .inputSchema(inputSchema)
   .outputSchema(outputSchema)
   .action(async ({ parsedInput: { bucket, path } }) => {
     if (!(await bucketExist(bucket))) {

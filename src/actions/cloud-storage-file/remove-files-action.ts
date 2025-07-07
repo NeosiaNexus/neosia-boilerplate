@@ -6,7 +6,7 @@ import { authAction } from '@/lib/actions';
 import prisma from '@/lib/prisma';
 import { storage } from '@/lib/storage';
 
-const paramSchema = z.object({
+const inputSchema = z.object({
   bucket: z.string().min(1),
   paths: z.array(z.string()).nonempty(),
 });
@@ -18,7 +18,7 @@ const outputSchema = z.object({
 });
 
 export const removeFilesAction = authAction
-  .schema(paramSchema)
+  .inputSchema(inputSchema)
   .outputSchema(outputSchema)
   .action(async ({ parsedInput: { bucket, paths } }) => {
     if (paths.length === 0) {
