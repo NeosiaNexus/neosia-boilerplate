@@ -11,11 +11,7 @@ const isProtectedRoute = (path: string): boolean => {
 };
 
 export async function middleware(req: NextRequest): Promise<NextResponse> {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  const path = req.nextUrl.pathname;
+  const path = req.nextUrl.pathname.toLocaleLowerCase();
 
   // TODO : Enlever le commentaire si on veut vérifier les rôles avant de rediriger l'utilisateur
   // const userRoles = session?.user.role?.split(',');
@@ -23,6 +19,10 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
   if (path.startsWith('/image') || path.startsWith('/_next') || path.includes('.')) {
     return NextResponse.next();
   }
+
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
   if (isProtectedRoute(path) && !session) {
     return NextResponse.redirect(
