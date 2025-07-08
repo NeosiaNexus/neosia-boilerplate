@@ -4,12 +4,13 @@ import { z } from 'zod';
 
 import { authAction } from '@/lib/actions';
 import prisma from '@/lib/prisma';
-import { getBucketOrCreate, getPresignedUrl, storage } from '@/lib/storage';
+import { getBucketOrCreate, storage } from '@/lib/storage';
 import { pathSchema } from '@/schemas/common-schema';
 
 const inputSchema = z.object({
   bucket: z.string().min(1),
   path: pathSchema,
+  isPublic: z.boolean().optional().default(false),
   fileData: z.object({
     name: z
       .string()
@@ -29,7 +30,7 @@ const outputSchema = z.object({
     .object({
       id: z.string(),
       path: pathSchema,
-      publicUrl: z.string(),
+      publicUrl: z.string().nullable(),
     })
     .nullable(),
 });
@@ -37,9 +38,9 @@ const outputSchema = z.object({
 export const uploadFileAction = authAction
   .inputSchema(inputSchema)
   .outputSchema(outputSchema)
-  .action(async ({ parsedInput: { bucket, path, fileData }, ctx: { session } }) => {
+  .action(async ({ parsedInput: { bucket, path, isPublic, fileData }, ctx: { session } }) => {
     try {
-      await getBucketOrCreate(bucket);
+      await getBucketOrCreate(bucket, isPublic);
     } catch {
       return {
         message: 'Le bucket n’existe pas et n’a pas pu être créé',
@@ -66,11 +67,10 @@ export const uploadFileAction = authAction
       };
     }
 
-    let publicUrl: string;
-    try {
-      publicUrl = await getPresignedUrl(bucket, objectKey);
-    } catch {
-      publicUrl = `${process.env.MINIO_ENDPOINT}/${bucket}/${objectKey}`;
+    let publicUrl: string | null = null;
+
+    if (isPublic) {
+      publicUrl = `${process.env.MINIO_CLOUD_URL}:9000/${bucket}/${objectKey}`;
     }
 
     let record;
@@ -80,6 +80,7 @@ export const uploadFileAction = authAction
           bucket,
           path: objectKey,
           publicUrl,
+          isPublic,
           fileName: fileData.name,
           size: fileData.size,
           type: fileData.type,

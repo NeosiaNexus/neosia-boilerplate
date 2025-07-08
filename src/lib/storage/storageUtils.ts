@@ -1,18 +1,35 @@
 import signingClient from './signingClient';
 import storage from './storage';
 
-export async function getBucketOrCreate(bucketName: string): Promise<void> {
+export async function getBucketOrCreate(bucketName: string, isPublic = false): Promise<void> {
   const exists = await storage.bucketExists(bucketName);
   if (!exists) {
     await storage.makeBucket(bucketName, process.env.MINIO_REGION);
-    return;
+
+    if (isPublic) {
+      await storage.setBucketPolicy(bucketName, getPublicReadPolicy(bucketName));
+    }
   }
+}
+
+function getPublicReadPolicy(bucketName: string): string {
+  return JSON.stringify({
+    Version: '2012-10-17',
+    Statement: [
+      {
+        Effect: 'Allow',
+        Principal: { AWS: '*' },
+        Action: ['s3:GetObject'],
+        Resource: [`arn:aws:s3:::${bucketName}/*`],
+      },
+    ],
+  });
 }
 
 export async function getPresignedUrl(
   bucket: string,
   objectKey: string,
-  expiresSeconds = 300,
+  expiresSeconds?: number,
 ): Promise<string> {
   return signingClient.presignedGetObject(bucket, objectKey, expiresSeconds);
 }
