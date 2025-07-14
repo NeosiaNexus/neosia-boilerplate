@@ -52,7 +52,6 @@ export const uploadFileAction = authAction
     const ext = fileData.name.split('.').pop()!;
     const base = fileData.name.replace(new RegExp(`\\.${ext}$`), '');
     const objectKey = `${path}/${base}.${ext}`;
-
     const buffer = Buffer.from(fileData.arrayBuffer);
 
     try {
@@ -67,11 +66,7 @@ export const uploadFileAction = authAction
       };
     }
 
-    let publicUrl: string | null = null;
-
-    if (isPublic) {
-      publicUrl = `${process.env.MINIO_CLOUD_URL}:9000/${bucket}/${objectKey}`;
-    }
+    const publicUrl = isPublic ? `${process.env.MINIO_CLOUD_URL}/${bucket}/${objectKey}` : null;
 
     let record;
     try {
