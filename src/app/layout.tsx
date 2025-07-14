@@ -1,9 +1,11 @@
+import { Suspense } from 'react';
+
 import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import { Toaster } from 'sonner';
 
 import { config } from '@/lib/boiler-config';
-
+import ServerToaster from '@/lib/server-toast/ServerToaster';
 import './globals.css';
 
 const poppins = Poppins({
@@ -26,6 +28,9 @@ export default function RootLayout({
     <html lang={config.lang} suppressHydrationWarning>
       <body className={`${poppins.variable} antialiased`}>
         <Toaster richColors expand />
+        <Suspense>
+          <ServerToaster />
+        </Suspense>
         {children}
       </body>
     </html>
