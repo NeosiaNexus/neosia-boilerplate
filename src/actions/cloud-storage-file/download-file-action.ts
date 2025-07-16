@@ -18,6 +18,23 @@ const outputSchema = z.object({
   url: z.string().url().nullable(),
 });
 
+const updateDownloadCounter = async (
+  path: string,
+): Promise<void | z.infer<typeof outputSchema>> => {
+  try {
+    await prisma.storageFile.update({
+      where: { path },
+      data: { totalDownloads: { increment: 1 } },
+    });
+  } catch {
+    return {
+      message: 'Erreur lors de la mise à jour du compteur',
+      success: false,
+      url: null,
+    };
+  }
+};
+
 const downloadFileAction = authAction
   .inputSchema(inputSchema)
   .outputSchema(outputSchema)
@@ -27,6 +44,28 @@ const downloadFileAction = authAction
         message: 'Le bucket n’existe pas',
         success: false,
         url: null,
+      };
+    }
+
+    const dbFileInfo = await prisma.storageFile.findUnique({
+      where: { path },
+    });
+
+    if (!dbFileInfo) {
+      return {
+        message: 'Le fichier n’existe pas en base de données',
+        success: false,
+        url: null,
+      };
+    }
+
+    if (dbFileInfo.isPublic) {
+      await updateDownloadCounter(path);
+
+      return {
+        message: 'Fichier téléchargé avec succès',
+        success: true,
+        url: dbFileInfo.publicUrl,
       };
     }
 
@@ -41,18 +80,7 @@ const downloadFileAction = authAction
       };
     }
 
-    try {
-      await prisma.storageFile.update({
-        where: { path },
-        data: { totalDownloads: { increment: 1 } },
-      });
-    } catch {
-      return {
-        message: 'Erreur lors de la mise à jour du compteur',
-        success: false,
-        url: null,
-      };
-    }
+    await updateDownloadCounter(path);
 
     return {
       message: 'Fichier téléchargé avec succès',

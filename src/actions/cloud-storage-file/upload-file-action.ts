@@ -49,14 +49,15 @@ export const uploadFileAction = authAction
       };
     }
 
-    const ext = fileData.name.split('.').pop()!;
-    const base = fileData.name.replace(new RegExp(`\\.${ext}$`), '');
-    const objectKey = `${path}/${base}.${ext}`;
+    const lastDotIndex = fileData.name.lastIndexOf('.');
+    const base = fileData.name.slice(0, lastDotIndex);
+    const ext = fileData.name.slice(lastDotIndex + 1);
+    const objectKey = `${path.replace(/\/$/, '')}/${base}.${ext}`;
     const buffer = Buffer.from(fileData.arrayBuffer);
 
     try {
       await storage.putObject(bucket, objectKey, buffer, buffer.length, {
-        'Content-Type': fileData.type,
+        'Content-Type': fileData.type || 'application/octet-stream',
       });
     } catch {
       return {
